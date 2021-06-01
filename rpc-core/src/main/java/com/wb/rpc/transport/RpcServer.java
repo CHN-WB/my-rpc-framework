@@ -1,7 +1,6 @@
 package com.wb.rpc.transport;
 
-import com.wb.rpc.server.WorkerThread;
-import javafx.beans.binding.ObjectExpression;
+import com.wb.rpc.server.RequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,8 +47,8 @@ public class RpcServer {
             Socket socket;
             // 当未接收到连接请求时，accept()会一直阻塞
             while ((socket = serverSocket.accept()) != null) {
-                logger.info("客户端连接！IP: " + socket.getInetAddress());
-                threadPool.execute(new WorkerThread(socket, service));
+                logger.info("客户端连接！IP: " + socket.getInetAddress() + ":" + socket.getPort());
+                threadPool.execute(new RequestHandler(socket, service));
             }
         } catch (IOException e) {
             logger.error("连接时有错误发生: " + e);

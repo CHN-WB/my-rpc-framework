@@ -2,6 +2,8 @@ package com.wb.rpc.transport;
 
 import com.wb.rpc.entity.RpcRequest;
 import com.wb.rpc.entity.RpcResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -15,6 +17,7 @@ import java.lang.reflect.Proxy;
  */
 public class RpcClientProxy implements InvocationHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
     private String host;
     private int port;
 
@@ -32,6 +35,7 @@ public class RpcClientProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        logger.info("调用方法: {}#{}", method.getDeclaringClass().getName(), method.getName());
         // 向服务端发送的请求对象
         RpcRequest rpcRequest = RpcRequest.builder()
                 .interfaceName(method.getDeclaringClass().getName())
@@ -41,6 +45,6 @@ public class RpcClientProxy implements InvocationHandler {
                 .build();
         // 进行远程调用的客户端
         RpcClient rpcClient = new RpcClient();
-        return ((RpcResponse) rpcClient.sendRequest(rpcRequest, host, port)).getData();
+        return rpcClient.sendRequest(rpcRequest, host, port);
     }
 }
