@@ -27,13 +27,12 @@ public class RpcClientProxy implements InvocationHandler {
     // 抑制编译器产生警告信息
     @SuppressWarnings("unchecked")
     public <T> T getProxy(Class<T> clazz) {
-        // 创建代理对象
         return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, this);
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        // 客户端向服务端传输的对象，Builder模式生成
+        // 向服务端发送的请求对象
         RpcRequest rpcRequest = RpcRequest.builder()
                 .interfaceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())

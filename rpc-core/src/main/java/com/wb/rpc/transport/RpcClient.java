@@ -25,14 +25,14 @@ public class RpcClient {
          * socket套接字实现 TCP 网络传输
          * try()中一般放对资源的申请，若{}出现异常，()资源自动关闭
          */
-        try(Socket socket = new Socket(host, port)) {
+        try (Socket socket = new Socket(host, port)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             objectOutputStream.writeObject(rpcRequest);
             objectOutputStream.flush();
             return objectInputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("调用时有错误发生: ", e);
+            logger.error("调用时有错误发生：" + e);
             return null;
         }
     }

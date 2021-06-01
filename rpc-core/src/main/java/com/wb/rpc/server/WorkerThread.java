@@ -1,6 +1,7 @@
 package com.wb.rpc.server;
 
 import com.wb.rpc.entity.RpcRequest;
+import com.wb.rpc.entity.RpcResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,10 +39,10 @@ public class WorkerThread implements Runnable{
             Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
             // invoke(obj实例对象，obj可变参数)
             Object returnObject = method.invoke(service, rpcRequest.getParameters());
-            objectOutputStream.writeObject(returnObject);
+            objectOutputStream.writeObject(RpcResponse.success(returnObject));
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            logger.error("调用或发送时有错误发生: " + e);
+            logger.error("调用或发送时有错误发生：" + e);
         }
     }
 }
